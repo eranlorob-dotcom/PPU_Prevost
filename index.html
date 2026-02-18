@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse d'Impact Santé - PPU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content.open { max-height: 2000px; }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- En-tête -->
+        <header class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-md uppercase tracking-widest">Annexe 1</span>
+                <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">
+                Analyse d'Impact Santé <span class="text-blue-600">PPU</span>
+            </h1>
+            <p class="text-slate-500 text-lg max-w-3xl leading-relaxed border-l-4 border-blue-200 pl-6">
+                Résumé des effets des composantes du Programme Particulier d'Urbanisme sur les déterminants de la santé de la population.
+            </p>
+        </header>
+
+        <!-- Conteneur des cartes -->
+        <div id="ppu-container" class="space-y-4">
+            <!-- Les cartes seront injectées ici par JS -->
+        </div>
+
+        <!-- Pied de page / Légende -->
+        <footer class="mt-12 pt-8 border-t border-slate-200">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <div class="flex flex-wrap gap-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                        <span>Bénéfice Santé</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+                        <span>Mesure d'atténuation</span>
+                    </div>
+                </div>
+                <p class="italic">Document de synthèse - Direction de santé publique</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const PPUData = [
+            {
+                id: 1,
+                title: "Pôle institutionnel",
+                subtitle: "Nouvelle école secondaire",
+                icon: "school",
+                iconColor: "text-blue-600",
+                determinants: [
+                    { text: "Sécurité des déplacements", icon: "shield-check" },
+                    { text: "Alimentation", icon: "activity" },
+                    { text: "Activité physique", icon: "activity" },
+                    { text: "Développement des jeunes", icon: "users" }
+                ],
+                positives: [
+                    "Création d'un milieu favorable à l'autonomie et aux déplacements actifs (marche/vélo) pour les 1400 élèves.",
+                    "Consolidation d'un pôle civique renforçant le tissu social et l'accès aux services (bibliothèque, culture)."
+                ],
+                negatives: [
+                    "Exposition accrue aux aliments ultra-transformés : présence d'un « marais alimentaire » à moins de 1 km.",
+                    "Risques de conflits piétons/véhicules aux heures de pointe si les aménagements ne sont pas sécurisés physiquement."
+                ]
+            },
+            {
+                id: 2,
+                title: "Écoquartiers",
+                subtitle: "Ancien Golf et Cœur des Courants",
+                icon: "trees",
+                iconColor: "text-emerald-600",
+                determinants: [
+                    { text: "Logement (Abordabilité)", icon: "home" },
+                    { text: "Environnement physique", icon: "trees" },
+                    { text: "Santé mentale", icon: "activity" }
+                ],
+                positives: [
+                    "Intégration de la biophilie (nature en ville) favorisant le bien-être mental et la réduction du stress.",
+                    "Potentiel de diversification de l'offre résidentielle."
+                ],
+                negatives: [
+                    "Risque de perte de canopée mature lors des travaux de construction.",
+                    "Exposition au bruit autoroutier (A-15) pour les nouveaux résidents des zones limitrophes.",
+                    "Risque d'écoembourgeoisement si l'offre n'est pas réellement abordable.",
+                    "Risque d'inadaptation des logements aux personnes aînées."
+                ]
+            },
+            {
+                id: 3,
+                title: "Route 117",
+                subtitle: "Requalification en boulevard urbain",
+                icon: "map",
+                iconColor: "text-slate-600",
+                determinants: [
+                    { text: "Mobilité et Transport", icon: "map" },
+                    { text: "Qualité de l'air & Bruit", icon: "wind" },
+                    { text: "Lien social (Isolement)", icon: "users" }
+                ],
+                positives: [
+                    "Réduction de l'effet de coupure urbaine, favorisant la cohésion sociale.",
+                    "Amélioration de l'accès au transport collectif et aux services de proximité.",
+                    "Cadre de vie plus convivial et esthétique."
+                ],
+                negatives: [
+                    "Persistance des nuisances si le volume de trafic de transit reste élevé.",
+                    "Sentiment d'insécurité maintenu pour les piétons si les passages ne sont pas fréquents."
+                ]
+            }
+        ];
+
+        function renderCards() {
+            const container = document.getElementById('ppu-container');
+            container.innerHTML = PPUData.map(item => `
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md">
+                    <div class="p-4 md:p-6 bg-slate-50 border-b border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-100/50 transition-colors" onclick="toggleAccordion(${item.id})">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-white rounded-lg shadow-sm">
+                                <i data-lucide="${item.icon}" class="w-6 h-6 ${item.iconColor}"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg uppercase tracking-tight">${item.title}</h3>
+                                <p class="text-slate-500 text-sm italic">${item.subtitle}</p>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-down" id="chevron-${item.id}" class="text-slate-400 transition-transform duration-300"></i>
+                    </div>
+                    <div id="content-${item.id}" class="accordion-content open">
+                        <div class="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="bg-blue-50/40 p-5 rounded-xl border border-blue-100">
+                                <h4 class="text-xs font-bold text-blue-800 uppercase mb-4 flex items-center gap-2">
+                                    <i data-lucide="activity" class="w-3.5 h-3.5"></i> Déterminants
+                                </h4>
+                                <ul class="space-y-3">
+                                    ${item.determinants.map(det => `
+                                        <li class="flex items-center gap-3 text-sm text-slate-700">
+                                            <span class="p-1.5 bg-white rounded-md text-blue-500 shadow-sm border border-blue-100">
+                                                <i data-lucide="${det.icon}" class="w-4 h-4"></i>
+                                            </span>
+                                            <span class="font-medium">${det.text}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-emerald-50/40 p-5 rounded-xl border border-emerald-100">
+                                <h4 class="text-xs font-bold text-emerald-800 uppercase mb-4 flex items-center gap-2">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Effets positifs (+)
+                                </h4>
+                                <ul class="space-y-4 text-sm text-slate-700">
+                                    ${item.positives.map(pos => `<li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span><p>${pos}</p></li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-amber-50/40 p-5 rounded-xl border border-amber-100">
+                                <h4 class="text-xs font-bold text-amber-800 uppercase mb-4 flex items-center gap-2">
+                                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Risques (-)
+                                </h4>
+                                <ul class="space-y-4 text-sm text-slate-700">
+                                    ${item.negatives.map(neg => `<li class="flex gap-3"><span class="text-amber-500 font-bold">•</span><p>${neg}</p></li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const chevron = document.getElementById(`chevron-${id}`);
+            content.classList.toggle('open');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        window.onload = renderCards;
+    </script>
+</body>
+</html>
